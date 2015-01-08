@@ -11,7 +11,7 @@ bem-forum-koa
 ### Установка
 
 * Клонировать репозиторий `git clone git@github.com:MrKashlakov/bem-forum-koa.git`
-* Перейти в папку со скаченным проектом: `cd bem-forum-koa`
+* Перейти в папку со скачанным проектом `cd bem-forum-koa`
 * Установить зависимости `npm i`
 * Запустить проект `node --harmony index.js`
 

@@ -3,9 +3,9 @@
 	"forum": {
 		"oauth": {
 			"localhost": {
-				"clientId": "eeb6ddff8b56029ef536",
-				"secret": "2abf19b288df0f009c613957562d9181627d8906",
-				"redirectUrl": "http://localhost:1337/forum/auth"
+				"clientId": "cleient id code",
+				"secret": "secret code",
+				"redirectUrl": "http://localhost:3000/forum/auth"
 			}
 		}
 	}
