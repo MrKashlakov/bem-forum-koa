@@ -1,0 +1,133 @@
+block('forum').elem('add-form')(
+    def()(function() {
+        var forum = this._forum,
+            labels = [];
+
+        forum.labels.forEach(function(label) {
+            return labels.push(label.name);
+        });
+
+        return {
+            block: 'forum-form',
+            js: {
+                forumUrl: req.viewBag.forumUrl,
+                labelsRequired: req.viewBag.labelsRequired
+            },
+            mods: { visibility: 'hidden' },
+            mix: {
+                block: 'forum',
+                elem: 'add-form',
+                js: { csrf: req.viewBag.csrf }
+            },
+            content: {
+                block: 'forum',
+                elem: 'inner',
+                content: [
+                    {
+                        block: 'input',
+                        mods: {
+                            theme: 'normal',
+                            size: 'l',
+                            'has-clear' : true
+                        },
+                        name: 'title',
+                        placeholder: BEM.I18N('forum', 'title-placeholder'),
+                        mix: [
+                            {
+                                block: 'forum',
+                                elem: 'add-title'
+                            },
+                            {
+                                block: 'forum-form',
+                                elem: 'control',
+                                elemMods: { autoclear: 'yes' }
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'input',
+                        attrs: { type: 'hidden', name: '_csrf', value: req.viewBag.csrf }
+                    },
+                    {
+                        block : 'forum-create',
+                        content : [
+                            {
+                                block: 'input',
+                                mods: {
+                                    theme: 'normal',
+                                    size: 'l',
+                                    type: 'textarea',
+                                    'has-clear' : true
+                                },
+                                name: 'body',
+                                placeholder: BEM.I18N('forum', 'body-placeholder'),
+                                mix: [
+                                    {
+                                        block: 'forum',
+                                        elem: 'add-body'
+                                    },
+                                    {
+                                        block: 'forum-form',
+                                        elem: 'control',
+                                        elemMods: { autoclear: 'yes' }
+                                    },
+                                    {
+                                        block : 'forum-create',
+                                        elem : 'view',
+                                        mods : { type : 'source', visible : true }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    req.viewBag.labelsRequired ? {
+                        block: 'forum-labels',
+                        js: { labels: labels, forumUrl: req.viewBag.forumUrl },
+                        mods: { inline: true, view: 'checkbox' },
+                        mix: [{ block: 'forum', elem: 'labels' }],
+                        content: [
+                            {
+                                elem: 'title',
+                                content: BEM.I18N('forum', 'title-labels')
+                            },
+                            {
+                                block: 'spin',
+                                mods: { theme: 'normal', size: 'l', progress: true },
+                                mix: [
+                                    { block: 'forum-labels', elem: 'spin' },
+                                    { block: 'forum', elem: 'labels-spin' }
+                                ]
+                            },
+                            {
+                                elem: 'wrap'
+                            }
+                        ]
+                    } : '',
+                    {
+                        block: 'forum-form',
+                        elem: 'actions',
+                        content: [
+                            {
+                                block: 'button',
+                                mods: { theme: 'normal', size : 'm', type: 'submit', view: 'action' },
+                                text: BEM.I18N('forum', 'add-post'),
+                                mix: [{ block: 'forum-form', elem: 'submit' }]
+                            },
+                            {
+                                block: 'spin',
+                                mix: { block: 'forum-form', elem: 'spin' },
+                                mods: { theme: 'normal', size: 'm' }
+                            },
+                            {
+                                block: 'button',
+                                mods: { theme: 'normal', size : 'm' },
+                                text: BEM.I18N('forum', 'cancel-post'),
+                                mix: [{ block: 'forum-form', elem: 'cancel' }]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    })
+);

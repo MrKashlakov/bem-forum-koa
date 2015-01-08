@@ -1,0 +1,8 @@
+libs/
+node_modules/
+.DS_Store
+.enb/tmp
+configs/current
+*.bundles/*/*.*
+!*.bundles/*/*.bemdecl.js
+npm-debug.log

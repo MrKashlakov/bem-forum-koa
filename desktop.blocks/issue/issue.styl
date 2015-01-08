@@ -1,0 +1,30 @@
+.issue
+{
+    overflow-x: hidden;
+    min-width: 500px;
+    margin-bottom: 40px;
+    padding: 0 15px;
+
+    &:last-child
+    {
+        margin-bottom: 10px;
+    }
+
+    &__wrap
+    {
+        transition: all .5s ease;
+
+        .forum-column
+        {
+            &_side_left
+            {
+                max-width: $avatar-size-main;
+            }
+
+            &_side_right
+            {
+                margin-left: 20px;
+            }
+        }
+    }
+}

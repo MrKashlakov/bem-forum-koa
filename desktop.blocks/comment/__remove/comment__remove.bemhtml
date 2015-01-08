@@ -1,0 +1,15 @@
+block('comment').elem('remove')(
+    def()(function() {
+        return applyCtx({
+            block: 'link',
+            title: BEM.I18N('comment', 'remove'),
+            mods: { pseudo: true },
+            js: { action: 'Remove' },
+            content: {
+                block: 'icon',
+                mods: { action: 'remove', size: '16', hover: 'opacity' }
+            },
+            mix: { block: 'comment', elem: 'remove' }
+        });
+    })
+);

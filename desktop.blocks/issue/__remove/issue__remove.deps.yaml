@@ -1,0 +1,5 @@
+- block: icon
+  mods: { action: remove, hover: opacity, size: 18 }
+
+- block: link
+  mods: { pseudo: true }

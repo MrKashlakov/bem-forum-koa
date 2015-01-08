@@ -1,0 +1,7 @@
+- block: forum-labels
+  mods: { view: menu }
+
+- block: forum-sorting
+
+- elems:
+  - title

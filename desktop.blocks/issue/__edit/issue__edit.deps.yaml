@@ -1,0 +1,7 @@
+- block: icon
+  mods: { action: edit, hover: opacity, size: 18 }
+
+- block: link
+  mods: { pseudo: true }
+
+- elem: edit-form

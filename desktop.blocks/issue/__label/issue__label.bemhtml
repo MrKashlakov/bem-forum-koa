@@ -1,0 +1,10 @@
+block('issue').elem('label')(
+    def()(function() {
+        return applyCtx({
+            block: 'link',
+            mix: { block: this.block, elem: this.elem },
+            attrs: { style: 'border-color:#' + this.ctx.color + ';' },
+            content: this.ctx.content
+        });
+    })
+);

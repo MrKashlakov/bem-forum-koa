@@ -1,0 +1,23 @@
+block('forum-labels').mod('view', 'checkbox')(
+    match(function() { return this.ctx.data; }).content()(function() {
+        var labels = this.ctx.data;
+
+        return labels.map(function(label) {
+            return {
+                block: 'checkbox',
+                mods: {
+                    theme : 'normal',
+                    size : 'm'
+                },
+                name: 'labels[]',
+                val: label.name,
+                text: label.name,
+                color: label.color,
+                mix: [
+                    { block: 'forum-labels', elem: 'label' },
+                    { block: 'forum-form', elem: 'control' }
+                ]
+            }
+        });
+    })
+);

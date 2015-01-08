@@ -1,0 +1,19 @@
+block('forum-header').mod('view', 'auth-no')(
+
+    match(function() { return !this._authUser; }).content()(function() {
+        var header = applyNext();
+
+        return [
+            header[0],
+            {
+                block: 'button',
+                url: req.viewBag.forumUrl + 'auth/',
+                text: BEM.I18N('forum-header', 'login') + ' (github.com)',
+                mods: { theme: 'normal', size: 'm', view: 'action', type: 'link' },
+                mix: { block: 'forum-header', elem: 'auth-button' }
+            },
+            header[1],
+            header[2]
+        ]
+    })
+);

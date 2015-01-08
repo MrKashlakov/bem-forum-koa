@@ -1,0 +1,423 @@
+block('issue')(
+    match(function() { return this.ctx.data; }).def()(function() {
+        var issue = this.ctx.data,
+            login = issue.user.login,
+            isArchive = issue.labels.some(function(label) {
+                return label.name === 'archive';
+            }),
+            isOwner = isArchive ? false : req.cookies.get('forum_username') === login;
+
+        return applyNext({ _issue: issue, _isOwner: isOwner, _isArchive: isArchive });
+    }),
+
+    match(function() { return this._issue; }).content()(function() {
+        var issue = this._issue;
+
+        return [
+            {
+                block: 'issue',
+                elem: 'wrap',
+                content: [
+                    {
+                        elem: 'line',
+                        elemMods: { level: 'top' },
+                        mix: { block: 'forum-line', mods: { valign: 'middle' }}
+                    },
+                    {
+                        elem: 'line',
+                        elemMods: { level: 'middle' },
+                        mix: { block: 'forum-line', mods: { valign: 'middle' }}
+                    }
+                ]
+            },
+            {
+                elem: 'comments'
+            }
+        ]
+    }),
+
+    elem('comments')(
+        // show comments on issue page
+        match(function() { return this._forum && this._forum.comments; }).def()(function() {
+            var forum = this._forum,
+                issue = forum.issue,
+                comments = forum.comments;
+
+            return applyCtx([
+                {
+                    block: 'comments',
+                    mods: { view: 'open' },
+                    data: comments,
+                    js: {
+                        issueNumber: issue.number,
+                        comments: issue.comments,
+                        forumUrl: req.viewBag.forumUrl
+                    }
+                }
+            ]);
+        }),
+
+        // hide comments on list issues page
+        match(function() { return !this._forum || !this._forum.comments; }).def()(function() {
+            var issue = this._issue;
+
+            return applyCtx({
+                block: 'comments',
+                mods: { hidden: true },
+                js: {
+                    issueNumber: issue.number,
+                    comments: issue.comments,
+                    forumUrl: req.viewBag.forumUrl
+                },
+                content: {
+                    elem: 'container'
+                }
+            });
+        })
+    ),
+
+    // user avatar + name
+    elem('line').elemMod('level', 'top')(
+
+        content()(function() {
+            var issue = this._issue,
+                user = issue.user,
+                date = issue.created_at;
+
+            return [
+                {
+                    block: 'forum-column',
+                    mods: { side: 'left' },
+                    content: {
+                        block: 'forum-user',
+                        elem: 'avatar',
+                        url: user.avatar_url,
+                        alt: user.login,
+                        link: user.html_url,
+                        mix: [{ block: 'issue', elem: 'avatar' }]
+                    }
+                },
+                {
+                    block: 'forum-column',
+                    mods: { side: 'right' },
+                    mix: { block: 'forum-flex' },
+                    content: {
+                        block: 'forum-line',
+                        mods: { valign: 'baseline' },
+                        content: [
+                            {
+                                block: 'forum-user',
+                                elem: 'name',
+                                url: user.html_url,
+                                title: user.login,
+                                content: user.login,
+                                mix: [{ block: 'issue', elem: 'username' }]
+                            },
+                            {
+                                block: 'forum-date',
+                                date: date,
+                                mix: [{ block: 'issue', elem: 'date' }]
+                            },
+                            {
+                                block: 'issue',
+                                elem: 'read-only'
+                            },
+                            {
+                                block: 'issue',
+                                elem: 'owner-action'
+                            }
+                        ]
+                    }
+                }
+            ]
+        })
+    ),
+
+    elem('read-only')(
+        match(function() { return !this._isArchive }).def()(function() {
+            return false;
+        }),
+
+        match(function() { return this._isArchive }).content()(function() {
+            return 'Read-only';
+        })
+    ),
+
+    elem('owner-action')(
+        match(function() { return !this._isOwner; }).def()(function() {
+            return '';
+        }),
+
+        match(function() { return this._isOwner; }).content()(function() {
+            return [
+                {
+                    elem: 'solve',
+                    js: {
+                        i18n: {
+                            'open-message': BEM.I18N('issue', 'open-message'),
+                            'close-message': BEM.I18N('issue', 'close-message'),
+                            post: BEM.I18N('issue', 'post')
+                        }
+                    },
+                    isClosed: 'closed' === this._issue.state
+                },
+                {
+                    elem: 'edit'
+                },
+                {
+                    elem: 'remove'
+                }
+            ]
+        })
+    ),
+
+    // body content + edit,delete buttons + labels + date
+    elem('line').elemMod('level', 'middle')(
+
+        content()(function() {
+            var issue = this._issue;
+
+            return [
+                {
+                    block: 'forum-column',
+                    mods: { side: 'left' }
+                },
+                {
+                    block: 'forum-column',
+                    mods: { side: 'right' },
+                    content: [
+                        {
+                            block: 'issue',
+                            elem: 'line',
+                            elemMods: { level: 'titles' },
+                            content: [
+                                {
+                                    block: 'issue',
+                                    elem: 'solve-badge',
+                                    elemMods: { show: 'closed' === issue.state }
+                                },
+                                {
+                                    block: 'issue',
+                                    elem: 'number',
+                                    content: '#' + issue.number
+                                },
+                                {
+                                    block: 'link',
+                                    mix: { block: this.block, elem: 'title' },
+                                    url: req.viewBag.forumUrl + 'issues/' + issue.number + '/',
+                                    content: _.escape(issue.title)
+                                },
+                                {
+                                    block: 'issue',
+                                    elem: 'labels'
+                                }
+                            ]
+                        },
+                        {
+                            block: 'issue',
+                            elem: 'body',
+                            mix: { block: 'text' }
+                        },
+                        {
+                            block: 'issue',
+                            elem: 'edit-form',
+                            mix: { block: 'text' }
+                        },
+                        {
+                            block: 'issue',
+                            elem: 'line',
+                            elemMods: { level: 'bottom' },
+                            mix: { block: 'forum-line', mods: { valign: 'stretch' }}
+                        }
+                    ]
+                }
+            ]
+
+        })
+    ),
+
+    elem('edit-form')(
+        def()(function() {
+            return '';
+        }),
+
+        match(function() { return this._isOwner; }).def()(function() {
+
+            var issue = this._issue;
+
+            return {
+                block: 'forum-form',
+                js: { labelsRequired: req.viewBag.labelsRequired },
+                mods: { visibility: 'hidden' },
+                mix: {
+                    block: 'issue',
+                    elem: 'edit-form'
+                },
+                content: [
+                    {
+                        block: 'input',
+                        mods: {
+                            theme: 'normal',
+                            size: 'l',
+                            'has-clear' : true
+                        },
+                        name: 'title',
+                        val: issue.title,
+                        placeholder: BEM.I18N('issue', 'edit-form-title-placeholder'),
+                        mix: [
+                            {
+                                block: 'issue',
+                                elem: 'edit-title'
+                            },
+                            {
+                                block: 'forum-form',
+                                elem: 'control',
+                                elemMods: { autoclear: 'yes' }
+                            }
+                        ]
+                    },
+                    {
+                        tag: 'input',
+                        attrs: { type: 'hidden', name: '_csrf', value: req.viewBag.csrf }
+                    },
+                    {
+                        block : 'forum-create',
+                        content : [
+                            {
+                                block: 'input',
+                                mods: {
+                                    theme: 'normal',
+                                    type: 'textarea',
+                                    size: 'l',
+                                    'has-clear' : true
+                                },
+                                name: 'body',
+                                val: _.escape(issue.body),
+                                placeholder: BEM.I18N('issue', 'edit-form-desc-placeholder'),
+                                mix: [
+                                    {
+                                        block: 'issue',
+                                        elem: 'edit-textarea'
+                                    },
+                                    {
+                                        block: 'forum-form',
+                                        elem: 'control',
+                                        elemMods: { autoclear: 'yes' }
+                                    },
+                                    {
+                                        block : 'forum-create',
+                                        elem : 'view',
+                                        mods : { type : 'source', visible : true }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    req.viewBag.labelsRequired ? {
+                        block: 'forum-labels',
+                        js: { forumUrl: req.viewBag.forumUrl },
+                        mods: { inline: true, view: 'checkbox' },
+                        mix: [{ block: 'issue', elem: 'edit-labels' }],
+                        content: [
+                            {
+                                elem: 'title',
+                                content: BEM.I18N('issue', 'edit-form-labels-title')
+                            },
+                            {
+                                block: 'spin',
+                                mods: { theme: 'normal', size: 'l', progress: true },
+                                mix: [
+                                    { block: 'forum-labels', elem: 'spin' },
+                                    { block: 'issue', elem: 'edit-labels-spin' }
+                                ]
+                            },
+                            {
+                                elem: 'wrap'
+                            }
+                        ]
+                    } : '',
+                    {
+                        block: 'forum-form',
+                        elem: 'actions',
+                        content: [
+                            {
+                                block: 'button',
+                                mods: { theme: 'normal', size : 'm', type: 'submit', view: 'action' },
+                                text: BEM.I18N('issue', 'edit-form-button-save'),
+                                mix: [
+                                    { block: 'issue', elem: 'edit-button' },
+                                    { block: 'forum-form', elem: 'submit' }
+                                ]
+                            },
+                            {
+                                block: 'spin',
+                                mods: { theme: 'normal', size: 'm' },
+                                mix: { block: 'forum-form', elem: 'spin' }
+                            },
+                            {
+                                block: 'button',
+                                mods: { theme: 'normal', size : 'm' },
+                                text: BEM.I18N('issue', 'edit-form-button-cancel'),
+                                mix: [
+                                    { block: 'issue', elem: 'edit-cancel' },
+                                    { block: 'forum-form', elem: 'cancel' }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        })
+    ),
+
+    // labels
+    elem('labels')(
+        match(function() { return this._issue.labels.length; }).def()(function() {
+
+            var labels = this._issue.labels;
+
+            return labels.map(function(label) {
+                return {
+                    elem: 'label',
+                    color: label.color,
+                    content: label.name
+                }
+            });
+        })
+    ),
+
+    // body content
+    elem('body')(
+        content()(function() {
+            var text = this._issue.body;
+
+            return this._isArchive ? text : req.viewBag.util.mdToHtml(text);
+        })
+    ),
+
+    // button 'answer'
+    elem('line').elemMod('level', 'bottom')(
+        match(function() { return !this._forum || !this._forum.comments; }).content()(function() {
+            var issue = this._issue,
+                comments = issue.comments;
+
+            if((!req.cookies.get('forum_username') || this._isArchive) && comments === 0) {
+                return '';
+            }
+
+            return [
+                {
+                    block : 'button',
+                    text : comments === 0 ? BEM.I18N('issue', 'reply') : BEM.I18N('issue', 'comments') + ': ' + comments,
+                    mods : { theme : 'normal', size : 'm', togglable : 'check' },
+                    mix: { block: this.block, elem: 'comments-switcher' }
+                },
+                {
+                    block: 'spin',
+                    mods: { theme: 'normal', size: 'm' },
+                    mix: { block: 'issue', elem: 'spin' }
+                }
+            ];
+        })
+    )
+);

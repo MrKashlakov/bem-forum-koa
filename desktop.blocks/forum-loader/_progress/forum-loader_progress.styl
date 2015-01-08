@@ -1,0 +1,33 @@
+.forum-loader
+{
+    transition: background-color .3s ease-in;
+
+    &_progress
+    {
+        position: fixed;
+        top: 0;
+        right: 208px;
+        bottom: 0;
+        left: 0;
+
+        margin: auto;
+    }
+
+    &_progress
+    {
+        z-index: $z-index;
+
+        background-color: rgba(255,255,255, .8);
+
+        .spin
+        {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+
+            margin: auto;
+        }
+    }
+}

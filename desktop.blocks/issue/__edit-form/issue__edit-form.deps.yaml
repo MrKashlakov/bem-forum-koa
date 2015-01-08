@@ -1,0 +1,12 @@
+- block: input
+  mods: { theme: 'normal', type: 'textarea', 'has-clear': true }
+
+- block: forum-form
+  mods: { visibility: 'hidden' }
+
+- block: forum-create
+
+- block: forum-labels
+  mods: { inline: true, view: checkbox }
+
+- elems: [edit-title, edit-textarea]

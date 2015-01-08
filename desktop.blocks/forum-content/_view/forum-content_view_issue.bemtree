@@ -1,0 +1,11 @@
+block('forum-content').mod('view', 'issue')(
+    content()(function() {
+        return {
+            block: 'issue',
+            data: this._forum.issue,
+            forumUrl: req.viewBag.forumUrl,
+            labelsRequired: req.viewBag.labelsRequired,
+            csrf: req.viewBag.csrf
+        }
+    })
+);

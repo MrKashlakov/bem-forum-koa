@@ -1,0 +1,13 @@
+block('forum')(
+    // for check, if user checked at least one label
+    // for create/edit issue forms - knowledge is taken
+    // from common config website
+    js()(function() {
+        var forum = this.ctx.forum;
+
+        return {
+            labelsRequired: forum.labelsRequired,
+            global: forum.global
+        };
+    })
+);

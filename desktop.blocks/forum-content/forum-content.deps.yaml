@@ -1,0 +1,14 @@
+- block: events
+  elem: channels
+
+- block: forum-issues
+- block: forum-loader
+- block: forum-pager
+- block: location
+
+- elems:
+  - container
+  - left
+  - right
+
+- mods: { view: [issues, issue] }

@@ -1,0 +1,39 @@
+block('forum')(
+    def()(function() {
+        return applyNext({ _forum: this.ctx.forum });
+    }),
+
+    content()(function() {
+        return {
+            block: 'forum-content',
+            mods: { view: this._forum.view },
+            js: { forumUrl: req.viewBag.forumUrl },
+            mix: [
+                { block: 'forum', elem: 'content' }
+            ]
+        }
+    }),
+
+    match(function() { return !req.cookies.get('forum_username'); }).content()(function() {
+        return [
+            {
+                block: 'forum-header',
+                mods: { view: 'auth-no' }
+            },
+            applyNext()
+        ]
+    }),
+
+    match(function() { return req.cookies.get('forum_username'); }).content()(function() {
+        return [
+            {
+                block: 'forum-header',
+                mods: { view: 'auth' }
+            },
+            {
+                elem: 'add-form'
+            },
+            applyNext()
+        ]
+    })
+);

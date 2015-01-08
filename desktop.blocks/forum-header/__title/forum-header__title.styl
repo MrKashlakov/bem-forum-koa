@@ -1,0 +1,43 @@
+$icon-logo-size = 9px;
+
+.forum-header__title
+{
+    position: relative;
+
+    &:after
+    {
+        font-size: 6px;
+
+        position: absolute;
+
+        content: attr(data-status);
+        text-transform: uppercase;
+    }
+
+    .icon
+    {
+        margin-right: 5px;
+
+        &_view_logo
+        {
+            position: absolute;
+            top: .2em;
+            left: .3em;
+
+            width: $icon-logo-size;
+            height: $icon-logo-size;
+
+            background-size: $icon-logo-size;
+        }
+    }
+
+    h1
+    {
+        font-size: 17px;
+        line-height: 1;
+
+        display: inline-block;
+
+        margin: 0;
+    }
+}

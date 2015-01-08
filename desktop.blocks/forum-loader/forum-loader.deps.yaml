@@ -1,0 +1,8 @@
+- block: forum-variables
+  required: true
+
+- block: spin
+  mods: { theme: normal }
+  required: true
+
+- mods: { progress: true }

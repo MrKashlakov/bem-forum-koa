@@ -1,0 +1,12 @@
+block('forum-form')(
+
+    tag()('form'),
+
+    js()({
+        i18n: {
+            'empty-title': BEM.I18N('forum-form', 'empty-title'),
+            'empty-comment': BEM.I18N('forum-form', 'empty-comment'),
+            'empty-labels': BEM.I18N('forum-form', 'empty-labels')
+        }
+    })
+);

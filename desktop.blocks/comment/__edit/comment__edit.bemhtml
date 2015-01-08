@@ -1,0 +1,15 @@
+block('comment').elem('edit')(
+    def()(function() {
+        return applyCtx({
+            block: 'link',
+            title: BEM.I18N('comment', 'edit'),
+            mods: { pseudo: true },
+            js: { action: 'Edit' },
+            content: {
+                block: 'icon',
+                mods: { action: 'edit', size: '16', hover: 'opacity' }
+            },
+            mix: { block: 'comment', elem: 'edit' }
+        });
+    })
+);

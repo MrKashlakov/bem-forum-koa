@@ -1,0 +1,7 @@
+- block: button
+  mods: { theme: normal }
+  required: true
+
+- block: icon
+  mods: { view: more, size: 16 }
+  required: true

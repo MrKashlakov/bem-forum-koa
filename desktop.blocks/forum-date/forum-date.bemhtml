@@ -1,0 +1,24 @@
+block('forum-date')(
+    match(function() { return !this.ctx.date; }).def()(false),
+
+    match(function() { return this.ctx.date; }).content()(function() {
+        var date = new Date(this.ctx.date),
+            i18n = BEM.I18N,
+            month = [
+                i18n('forum-date', 'jan'),
+                i18n('forum-date', 'feb'),
+                i18n('forum-date', 'mar'),
+                i18n('forum-date', 'apr'),
+                i18n('forum-date', 'may'),
+                i18n('forum-date', 'jun'),
+                i18n('forum-date', 'jul'),
+                i18n('forum-date', 'aug'),
+                i18n('forum-date', 'sep'),
+                i18n('forum-date', 'oct'),
+                i18n('forum-date', 'nov'),
+                i18n('forum-date', 'dec')
+            ];
+
+        return date.getDate() + ' ' + month[date.getMonth()] + ' ' + date.getFullYear();
+     })
+);

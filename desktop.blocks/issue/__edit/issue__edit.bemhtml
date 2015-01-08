@@ -1,0 +1,13 @@
+block('issue').elem('edit')(
+    content()(function() {
+        return {
+            block: 'link',
+            mods: { pseudo: true },
+            title: BEM.I18N('issue', 'edit'),
+            content: {
+                block: 'icon',
+                mods: { action: 'edit', size: '18', hover: 'opacity' }
+            }
+        };
+    })
+);

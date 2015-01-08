@@ -1,0 +1,8 @@
+- elems:
+  - actions
+  - cancel
+  - control
+  - spin
+  - submit
+
+- mods: { visibility: hidden }

@@ -1,0 +1,57 @@
+block('forum-header').mod('view', 'auth')(
+
+    match(function() { return req.cookies.get('forum_username'); }).content()(function() {
+        var header = applyNext();
+
+        return [
+            header[0],
+            {
+                elem: 'side-right',
+                content: [
+                    { elem: 'user-wrapper' },
+                    { elem: 'add-button' },
+                    header[1],
+                    header[2]
+                ]
+            }
+        ]
+    }),
+
+    elem('user-wrapper')(
+        content()(function() {
+            var user = this._forum.user;
+
+            return [
+                {
+                    block: 'forum-user',
+                    elem: 'avatar',
+                    url: user.avatar_url,
+                    alt: user.login,
+                    link: user.html_url
+                },
+                {
+                    block: 'forum-user',
+                    elem: 'name',
+                    url: user.html_url,
+                    title: user.login,
+                    target: '_blank',
+                    content: user.login
+                }
+            ]
+        })
+    ),
+
+    elem('add-button')(
+        def()(function() {
+            return {
+                block: 'button',
+                text: BEM.I18N('forum-header', 'add-post-button'),
+                mods: { theme: 'normal', size: 'm', view: 'action' },
+                mix: [
+                    { block: 'forum-header', elem: 'add-button' },
+                    { block: 'forum', elem: 'add' }
+                ]
+            }
+        })
+    )
+);

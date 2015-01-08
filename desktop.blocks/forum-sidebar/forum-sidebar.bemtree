@@ -1,0 +1,31 @@
+block('forum-sidebar')(
+    content()(function() {
+        return [
+            {
+                elem: 'sorting',
+                content: [
+                    {
+                        elem: 'title',
+                        content: BEM.I18N('forum-sidebar', 'title-sorting')
+                    },
+                    {
+                        block: 'forum-sorting'
+                    }
+                ]
+            },
+            {
+                elem: 'labels',
+                content: [
+                    {
+                        elem: 'title',
+                        content: BEM.I18N('forum-sidebar', 'title-labels')
+                    },
+                    {
+                        block: 'forum-labels',
+                        mods: { view: 'menu' }
+                    }
+                ]
+            }
+        ]
+    })
+);

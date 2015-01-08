@@ -1,0 +1,9 @@
+- block: comment
+- block: forum-flex
+
+- elems:
+  - actions
+  - add-form
+  - container
+
+- mods: { hidden: true, view: [open, close] }

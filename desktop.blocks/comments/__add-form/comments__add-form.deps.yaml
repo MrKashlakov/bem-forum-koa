@@ -1,0 +1,11 @@
+- block: input
+  mods: { theme: 'normal', type: 'textarea' }
+
+- elem: add-textarea
+- elem: add-button
+  mods: { type: [default, open] }
+
+- block: forum-form
+
+- block: forum-column
+- block: forum-flex

@@ -1,0 +1,35 @@
+- block: dom
+- block: jquery
+- block: events
+  elem: channels
+
+- block: forum-column
+- block: forum-line
+- block: link
+- block: forum-date
+- block: forum-user
+- block: comments
+- block: button
+  mods: { theme: normal }
+- block: spin
+  mods: { theme: 'normal' }
+- block: forum-labels
+
+- elems:
+  - avatar
+  - body
+  - comments-switcher
+  - date
+  - edit
+  - label
+  - line
+  - number
+  - owner-action
+  - read-only
+  - remove
+  - solve
+  - title
+  - username
+  - usertext
+
+- mods: { animate-remove: true }

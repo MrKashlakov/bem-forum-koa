@@ -1,0 +1,21 @@
+{
+	"forum": {
+		"port": 3000,
+		"defaultLanguage": "ru",
+		"auth": {
+			"tokens": []
+		},
+		"owner_token": "",
+		"labelsRequired": false,
+		"storage": {
+			"user": "MrKashlakov",
+			"repo": "bem-forum-koa"
+		},
+		"template": {
+			"level": "desktop",
+			"bundle": "index"
+		},
+		"debug": true,
+		"forumUrl": "/forum"
+	}
+}

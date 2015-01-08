@@ -1,0 +1,25 @@
+block('forum-header').elem('title')
+    .content()(function() {
+        var ctx = this.ctx;
+
+        return {
+            block: 'link',
+            url: ctx.url,
+            content: [
+                {
+                    block: 'icon',
+                    mods: { view: 'logo' }
+                },
+                {
+                    block: 'icon',
+                    mods: { view: 'comments', size: 18 }
+                },
+                {
+                    tag: 'h1',
+                    content: ctx.content
+                }
+            ],
+            mix: { block: 'forum-header', elem: 'title' },
+            attrs: { 'data-status': ctx.status }
+        };
+    });
