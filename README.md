@@ -1,0 +1,1 @@
+Russian version is available [here](https://github.com/MrKashlakov/bem-forum-koa/blob/master/README.ru.md).
