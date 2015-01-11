@@ -25,7 +25,7 @@ GithubApiController.prototype.getDefaultAPI = function* () {
 	return this._apiHash[_.sample(tokens)];
 }
 
-GithubApiController.prototype.addDefaultAPI = function* () {
+GithubApiController.prototype.addDefaultAPI = function () {
 	var tokens = this.options.auth ? this.options.auth.tokens : [];
 	this._apiHash = tokens.reduce(function (prev, token) {
 		var githubApi = new GithubApi(API_CONFIG);
@@ -34,11 +34,10 @@ GithubApiController.prototype.addDefaultAPI = function* () {
 			token: token
 		});
 
-		prev[token] = api;
+		prev[token] = githubApi;
 		return prev;
 	}, {});
 };
-
 
 GithubApiController.prototype.addUserAPI = function (token) {
 	if (!this._apiHash[token]) {
@@ -55,15 +54,16 @@ GithubApiController.prototype.addUserAPI = function (token) {
 GithubApiController.prototype._apiCall = function* (settings) {
 	settings = settings || {};
 	var options = settings.options || {};
+
 	var api = settings.token ? yield this.getUserAPI(settings.token) : yield this.getDefaultAPI();
 	options = _.extend({}, this.options.storage, options);
-	
-	console.log('API CALL: ', settings.token, settings.group, settings.name, options);
 
 	if (!api) {
-		console.log('ERR');
+		console.log('API EMPTY');
 		return undefined;
 	}
+
+	console.log('API CALL: ', settings.token, settings.group, settings.name, options);
 
 	return yield thunkify(api[settings.group][settings.name]).call(null, options);
 };

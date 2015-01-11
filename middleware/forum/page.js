@@ -8,40 +8,25 @@ module.exports = function (options) {
 	
 		var token = this.cookies.get('forum_token');
 
-		if (token) {
+		var dataAccess = new DataAccessLayer(options, token);
 
-			_.extend(options, {
-				token: token
-			});
+		var user = yield dataAccess.getAuthUser();
+		var labels = yield dataAccess.getLabels();
+		var issues = yield dataAccess.getIssues();
 
-			var githubApi = new GithubApiController(options);
-			var dataAccess = new DataAccessLayer(options);
+		var forum = {
+			user: user,
+			labels: labels,
+			issues: issues,
+			view: 'issues',
+			global: {
+				debug: true
+			}
+		};
 
-			githubApi.addUserAPI(token);
-			var user = yield githubApi.getAuthUser({
-				token: token
-			});
-
-			var labels = yield githubApi.getLabels({
-				token: token
-			});
-
-			var issues = yield dataAccess.getIssues({token: token});
-
-			var forum = {
-				user: user,
-				labels: labels,
-				issues: issues,
-				view: 'issues',
-				global: {
-					debug: true
-				}
-			};
-
-			_.extend(this.viewBag.__data, {
-				forum: forum
-			});
-		}
+		_.extend(this.viewBag.__data, {
+			forum: forum
+		});
 
 		return yield next;
 	}
