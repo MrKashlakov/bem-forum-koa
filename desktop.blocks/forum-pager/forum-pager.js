@@ -12,11 +12,17 @@ modules.define('forum-pager', ['i-bem__dom', 'location'], function(provide, BEMD
                             this._page = 1;
                         }
                     }, this);
+
+                    if (this.hasMod('disabled')) {
+                        this._button.setMod('disabled', true);    
+                    }
                 }
             },
 
-            disabled: function(modName, modVal) {
-                this._button.setMod('disabled', modVal);
+            disabled: {
+                yes: function(modName, modVal) {
+                    this._button.setMod('disabled', true);
+                }
             }
         },
 

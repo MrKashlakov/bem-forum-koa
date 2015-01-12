@@ -27,8 +27,28 @@ block('forum-content').mod('view', 'issues')(
                         }
                     }
                 ]
-            },
-            { block: 'forum-pager' }
+            }
+        ]
+    }),
+
+    match(function () { return req.viewBag.__data.forum.issues.length < 10; }).content()(function () {
+        return [
+            applyNext(),
+            {
+                block: 'forum-pager', 
+                mods: {
+                    disabled: 'yes'
+                }
+            }
+        ]
+    }),
+
+    match(function () { return req.viewBag.__data.forum.issues.length === 10; }).content()(function () {
+        return [
+            applyNext(),
+            {
+                block: 'forum-pager'
+            }
         ]
     })
 );

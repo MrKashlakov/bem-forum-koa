@@ -140,7 +140,7 @@ modules.define('issue', ['i-bem__dom', 'jquery', 'events__channels', 'dom', 'nex
 
             $.ajax({
                 dataType: 'html',
-                type: 'PUT',
+                type: 'POST',
                 timeout: 10000,
                 data: data,
                 url: params.forumUrl + 'issues/' + params.number + '/?__access=owner',

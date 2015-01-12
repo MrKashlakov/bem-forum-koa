@@ -7,7 +7,6 @@ var LabelViewController = require('./labels');
 var UserViewController = require('./users');
 var AuthViewController = require('./auth');
 var RepoViewController = require('./repo');
-var page = require('./page');
 
 /**
  * Create forum middleware
@@ -35,8 +34,6 @@ module.exports = function (options) {
 	_.extend(router, auth.getRouter());
 	var repo = new RepoViewController(options);
 	_.extend(router, repo.getRouter());
-
-	router.get('/', page(options));
 
 	return router.middleware();
 

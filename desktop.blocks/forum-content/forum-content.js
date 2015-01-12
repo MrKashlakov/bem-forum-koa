@@ -64,7 +64,10 @@ modules.define(
                 cache: false,
                 context: this
             }).done(function(result) {
-                this._pager.setMod('disabled', result.isLastPage);
+                console.log(result);
+                if (result.isLastPage) {
+                    this._pager.setMod('disabled', 'yes');
+                }
 
                 this._onSuccess(result.html, options.type)
             });

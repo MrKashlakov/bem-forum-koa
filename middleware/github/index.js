@@ -121,7 +121,7 @@ GithubApiController.prototype.editIssue = function* (settings) {
 GithubApiController.prototype.getComments = function* (settings) {
 	_.extend(settings, {
 		group: 'issues',
-		name: this._getFnName(arguments.callee)
+		name: 'getComments'
 	});
 
 	return yield this._apiCall(settings);

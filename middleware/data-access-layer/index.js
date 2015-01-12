@@ -57,7 +57,6 @@ DataAccessLayer.prototype._fetchIssues = function* (options) {
 	return options.issues;
 };
 
-
 DataAccessLayer.prototype.getIssues = function* (options) {
 	options = options || {};
 
@@ -123,19 +122,47 @@ DataAccessLayer.prototype.getIssues = function* (options) {
 	return issues;
 };
 
+DataAccessLayer.prototype.getIssue = function* (number) {
+	if (number && number > 0) {
+		var issues = yield this.getIssues();
+		return issues.filter(function (issue) {
+			return issue.number.toString() === number.toString();
+		})[0];
+	} else {
+		return null;
+	}
+};
+
+DataAccessLayer.prototype.createIssue = function* (options) {
+	options = options || {};
+	_.extend(options, {token: this.token});
+	return yield* this._githubApi.createIssue(options);
+};
+
+DataAccessLayer.prototype.editIssue = function* (options) {
+	options = options || {};
+	_.extend(options, {token: this.token});
+	return yield* this._githubApi.editIssue(options);
+}
+
 DataAccessLayer.prototype.getAuthUser = function* (options) {
 	options = options || {};
 	_.extend(options, {token: this.token});
 
 	return yield this._githubApi.getAuthUser(options);
-}
+};
 
 DataAccessLayer.prototype.getLabels = function* (options) {
 	options = options || {};
 	_.extend(options, {token: this.token});
 	//TODO: Add caching
 	return yield this._githubApi.getLabels(options);
-}
+};
 
+DataAccessLayer.prototype.getComments = function* (options) {
+	options = options || {};
+	_.extend(options, {token: this.token});
+	return yield this._githubApi.getComments(options);
+}
 
 module.exports = DataAccessLayer;

@@ -62,7 +62,7 @@ modules.define('forum', ['i-bem__dom', 'jquery'], function(provide, BEMDOM, $) {
 
             $.ajax({
                 dataType: 'html',
-                type: 'PUT',
+                type: 'POST',
                 data: data,
                 url: this._forumUrl + 'issues/' + result.number + '/?__access=owner',
                 context: this
