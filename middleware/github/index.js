@@ -130,7 +130,7 @@ GithubApiController.prototype.getComments = function* (settings) {
 GithubApiController.prototype.createComment = function* (settings) {
 	_.extend(settings, {
 		group: 'issues',
-		name: this._getFnName(arguments.callee)
+		name: 'createComment'
 	});
 
 	return yield this._apiCall(settings);

@@ -6,7 +6,7 @@ var GithubApiController = require('../github');
 
 var DEFAULT_PARAMS = {
 	page: 1,
-	perPage: 100,
+	perPage: 10,
 	limit:10,
 	sort: {
 		field: 'updated',
@@ -163,6 +163,12 @@ DataAccessLayer.prototype.getComments = function* (options) {
 	options = options || {};
 	_.extend(options, {token: this.token});
 	return yield this._githubApi.getComments(options);
+}
+
+DataAccessLayer.prototype.createComment = function* (options) {
+	options = options || {};
+	_.extend(options, {token: this.token});
+	return yield* this._githubApi.createComment(options);
 }
 
 module.exports = DataAccessLayer;
