@@ -54,6 +54,13 @@ DataAccessLayer.prototype._fetchIssues = function* (options) {
 		yield this._fetchIssues(options);
 	}
 
+	options.issues = options.issues.filter(function (issue) {
+		var labels = issue.labels;
+		return labels.length ? labels.every(function (label) {
+			return label.name !== 'removed';
+		}) : true;
+	});
+
 	return options.issues;
 };
 

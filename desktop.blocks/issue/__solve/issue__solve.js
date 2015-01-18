@@ -55,14 +55,14 @@ modules.define('issue', ['jquery'], function(provide, $, Issue) {
 
             $.ajax({
                 dataType: 'html',
-                type: 'PUT',
+                type: 'POST',
                 timeout: 10000,
                 data: {
                     state: isSolved ? 'open' : 'closed',
                     number: params.number,
                     _csrf: params.csrf
                 },
-                url: params.forumUrl + 'issues/' + params.id + '/?__mode=json',
+                url: params.forumUrl + 'issues/' + params.number + '/?__mode=json',
                 context: this
             }).done(function() {
                 this.setMod('solved', !isSolved);
