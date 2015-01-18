@@ -139,7 +139,7 @@ GithubApiController.prototype.createComment = function* (settings) {
 GithubApiController.prototype.deleteComment = function* (settings) {
 	_.extend(settings, {
 		group: 'issues',
-		name: this._getFnName(arguments.callee)
+		name: 'deleteComment'
 	});
 
 	return yield this._apiCall(settings);
@@ -148,7 +148,7 @@ GithubApiController.prototype.deleteComment = function* (settings) {
 GithubApiController.prototype.editComment = function* (settings) {
 	_.extend(settings, {
 		group: 'issues',
-		name: this._getFnName(arguments.callee)
+		name: 'editComment'
 	});
 
 	return yield this._apiCall(settings);

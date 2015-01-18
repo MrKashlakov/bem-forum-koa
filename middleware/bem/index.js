@@ -4,7 +4,6 @@ var TemplateController = require('./template');
 module.exports = function* (next) {
 	var template = new TemplateController({});
 
-
 	if (this.request.isXhr) {
 		if (this.bem) {
 			var html = yield template.run(_.extend(this.bem.templateCtx || {}, {data: this.bem.data}), this);

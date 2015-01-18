@@ -26,7 +26,7 @@ modules.define('comment', ['i-bem__dom', 'jquery'], function(provide, BEMDOM, $)
 
             $.ajax({
                 dataType: 'html',
-                type: 'PUT',
+                type: 'POST',
                 timeout: 10000,
                 data: data,
                 url: this.params.forumUrl + 'issues/' + this.params.issueNumber + '/comments/' + this.params.id + '/?__mode=content',

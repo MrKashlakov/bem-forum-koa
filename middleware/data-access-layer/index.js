@@ -163,12 +163,24 @@ DataAccessLayer.prototype.getComments = function* (options) {
 	options = options || {};
 	_.extend(options, {token: this.token});
 	return yield this._githubApi.getComments(options);
-}
+};
 
 DataAccessLayer.prototype.createComment = function* (options) {
 	options = options || {};
 	_.extend(options, {token: this.token});
 	return yield* this._githubApi.createComment(options);
-}
+};
+
+DataAccessLayer.prototype.editComment = function* (options) {
+	options = options || {};
+	_.extend(options, {token: this.token});
+	return yield* this._githubApi.editComment(options);
+};
+
+DataAccessLayer.prototype.deleteComment = function* (options) {
+	options = options || {};
+	_.extend(options, {token: this.token});
+	return yield* this._githubApi.deleteComment(options);
+};
 
 module.exports = DataAccessLayer;
