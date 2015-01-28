@@ -1,4 +1,4 @@
-var DataAccessLayer = require('../../data-access-layer');
+var CommentsDataLayer = require('./data-layer');
 
 var CommentViewController = function (settings) {
 	this.options = settings || {};
@@ -15,6 +15,7 @@ CommentViewController.prototype._init = function (settings) {
 		this.router.post('/issues/:issueId/comments/:commentId', this._editComment());
 		this.router.del('/issues/:issueId/comments/:commentId', this._deleteComment());
 	}
+	this._commentsDataLayer = new CommentsDataLayer(settings);
 };
 
 CommentViewController.prototype._getComments = function () {
@@ -23,9 +24,9 @@ CommentViewController.prototype._getComments = function () {
 		if (this.request.isXhr) {
 			var token = this.cookies.get('forum_token');
 			var number = this.params.issueId;
-			var dataLayer = new DataAccessLayer(_this.options, token);
+			_this._commentsDataLayer.setToken(token);
 
-			var comments = yield* dataLayer.getComments({
+			var comments = yield* _this._commentsDataLayer.getComments({
 				options: {
 					number: number
 				}
@@ -55,9 +56,9 @@ CommentViewController.prototype._createComment = function () {
 			var token = this.cookies.get('forum_token');
 			var number = this.params.issueId;
 			var body = this.request.body.body;
-			var dataLayer = new DataAccessLayer(_this.options, token);
+			_this._commentsDataLayer.setToken(token);
 
-			var comment = yield* dataLayer.createComment({
+			var comment = yield* _this._commentsDataLayer.createComment({
 				options: {
 					number: number,
 					body: body
@@ -86,9 +87,9 @@ CommentViewController.prototype._editComment = function () {
 			var issueId = this.params.issueId;
 			var commentId = this.params.commentId;
 			var body = this.request.body.body;
-			var dataLayer = new DataAccessLayer(_this.options, token);
+			_this._commentsDataLayer.setToken(token);
 
-			var comment = yield* dataLayer.editComment({
+			var comment = yield* _this._commentsDataLayer.editComment({
 				options: {
 					id: commentId,
 					body: body 
@@ -116,9 +117,9 @@ CommentViewController.prototype._deleteComment = function () {
 			var token = this.cookies.get('forum_token');
 			var issueId = this.params.issueId;
 			var commentId = this.params.commentId;
-			var dataLayer = new DataAccessLayer(_this.options, token);
+			_this._commentsDataLayer.setToken(token);
 
-			var result = yield* dataLayer.deleteComment({
+			var result = yield* _this._commentsDataLayer.deleteComment({
 				options: {
 					id: commentId
 				}

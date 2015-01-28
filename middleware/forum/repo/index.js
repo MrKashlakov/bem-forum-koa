@@ -7,7 +7,7 @@ var RepoViewController = function (settings) {
 RepoViewController.prototype._init = function (settings) {
 	this.router = settings.router;
 	if (this.router) {
-		this.router.get('repo', this._getRepoInfo);
+		this.router.get('/repo', this._getRepoInfo);
 	}
 };
 

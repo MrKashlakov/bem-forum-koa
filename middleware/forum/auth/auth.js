@@ -1,10 +1,7 @@
 var _ = require('underscore');
 var OAuth2 = require('oauth').OAuth2;
 
-//TODO: Use github API as module
-var github = require('../../github');
-
-var AuthController = function (options) {
+	var AuthController = function (options) {
 	this.options = options || {};
 	this._init();
 };
@@ -19,7 +16,7 @@ AuthController.prototype._init = function () {
 		}
 
 		if (config.clientId && config.secret) {
-			return this._createOAuth(config.clientId, config.secret);
+			return _this._createOAuth(config.clientId, config.secret);
 		}
 		return Object.keys(config).reduce(function (prev, key) {
 			prev[key] = _this._createOAuth(config[key]['clientId'], config[key]['secret']);

@@ -1,6 +1,7 @@
 var _ = require('underscore');
 
-var DataAccessLayer = require('../../data-access-layer');
+var IssuesDataController = require('./data-layer');
+var CommentsDataController = require('../comments/data-layer');
 
 var  IssueViewController = function (settings) {
 	 this.options = settings || {};
@@ -22,6 +23,8 @@ IssueViewController.prototype._init = function (settings) {
 		this.router.post('/issues/', this._createIssue());
 		this.router.post('/issues/:issueId', this._editIssue());	
 	}
+	this._issuesDataController = new IssuesDataController(settings);
+	this._commentsDataController = new CommentsDataController(settings);
 };
 
 /**
@@ -30,6 +33,7 @@ IssueViewController.prototype._init = function (settings) {
 IssueViewController.prototype._getIssues = function () {
 	var _this = this;
 	return function* (next) {
+
 		var options = {};
 		var page = this.request.query.page;
 		var labels = this.request.query.labels;
@@ -52,8 +56,8 @@ IssueViewController.prototype._getIssues = function () {
 		}
 
 		var token = this.cookies.get('forum_token');
-		var dataLayer = new DataAccessLayer(_this.options, token);
-		var issues = yield dataLayer.getIssues(options);
+		_this._issuesDataController.setToken(token);
+		var issues = yield* _this._issuesDataController.getIssues(options);
 
 		if (this.request.isXhr) {
 			if (this.request.query.__mode === 'json') {
@@ -71,18 +75,9 @@ IssueViewController.prototype._getIssues = function () {
 				};
 			}
 		} else {
-			var forum = {
-				user: this.session.user || {},
-				labels: this.session.labels,
+			_.extend(this.viewBag.__data.forum, {
 				issues: issues,
 				view: 'issues',
-				global: {
-					debug: true
-				}
-			};
-
-			_.extend(this.viewBag.__data, {
-				forum: forum
 			});
 		}
 
@@ -98,11 +93,13 @@ IssueViewController.prototype._getIssue = function () {
 	return function* (next) {
 		var token = this.cookies.get('forum_token');
 		var number = this.params.issueId;
-		var dataLayer = new DataAccessLayer(_this.options, token);
 
-		var issue = yield* dataLayer.getIssue(number);
+		_this._issuesDataController.setToken(token);
+		_this._commentsDataController.setToken(token);
 
-		var comments = yield* dataLayer.getComments({
+		var issue = yield* _this._issuesDataController.getIssue(number);
+
+		var comments = yield* _this._commentsDataController.getComments({
 			options: {
 				number: number
 			}
@@ -134,9 +131,9 @@ IssueViewController.prototype._createIssue = function () {
 	var _this = this;
 	return function* (next) {
 		var token = this.cookies.get('forum_token');
-		var dataLayer = new DataAccessLayer(_this.options, token);
+		_this._issuesDataController.setToken(token);
 
-		var result = yield* dataLayer.createIssue({
+		var result = yield* _this._issuesDataController.createIssue({
 			options: {
 				labels: [],
 				title: this.request.body.title,
@@ -166,14 +163,14 @@ IssueViewController.prototype._editIssue = function () {
 			token = ownerToken;
 		};
 
-		var dataLayer = new DataAccessLayer(_this.options, token);
+		_this._issuesDataController.setToken(token);
 		var options = _.omit(this.request.body, '_csrf');
-
+		
 		if (!options.labels || !ownerToken) {
 			options.labels = [];
 		}
 
-		var result = yield* dataLayer.editIssue({
+		var result = yield* _this._issuesDataController.editIssue({
 			options: options
 		});
 

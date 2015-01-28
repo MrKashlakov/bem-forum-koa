@@ -7,17 +7,8 @@ var stringify = require('json-stringify-safe');
 var vfs = require('vow-fs');
 var vow = require('vow');
 
-//TODO: Use config as module
-var config = require('../../config').get('forum');
-
-
 var templateController = function (options) {
-	_.extend(options, {
-		template: {
-			level: 'desktop',
-			bundle: 'index'
-		}
-	})
+	this.options = options;
 	var tmpl = options.template;
 	this.target = util.format('%s.bundles/%s/%s.min.template.i18n.js', tmpl.level, tmpl.bundle, tmpl.bundle);
 	if (tmpl.prefix) {
@@ -26,7 +17,7 @@ var templateController = function (options) {
 };
 
 templateController.prototype.run = function (ctx, koaContext) {
-	var builder = config.debug ? require('./builder') : {build : function () {
+	var builder = this.options.debug ? require('./builder') : {build : function () {
 		return vow.resolve();
 	}}
 	var _this = this;

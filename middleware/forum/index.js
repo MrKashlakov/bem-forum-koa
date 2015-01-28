@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var Router = require('koa-router');
+var csrf = require('koa-csrf');
 
 var IssueViewController = require('./issues');
 var CommentViewController = require('./comments');
@@ -7,12 +8,13 @@ var LabelViewController = require('./labels');
 var UserViewController = require('./users');
 var AuthViewController = require('./auth');
 var RepoViewController = require('./repo');
+var InitController = require('./init');
 
 /**
  * Create forum middleware
  * @return {Generator}
  */
-module.exports = function (options) {
+module.exports = function (options, app) {
 
 	var router = new Router();
 
@@ -34,6 +36,41 @@ module.exports = function (options) {
 	_.extend(router, auth.getRouter());
 	var repo = new RepoViewController(options);
 	_.extend(router, repo.getRouter());
+
+	var initScript = new InitController(options);
+
+	app.use(function* (next) {
+		var staticData = yield* initScript.initStaticData({
+			requestType: this.request.get('X-Requested-With'),
+			loadSettings: {
+				session: this.session,
+				token: this.cookies.get('forum_token')
+			},
+			csrf: this.csrf
+		});
+		this.request.isXhr = staticData.request.isXhr;
+		this.viewBag = staticData.viewBag;
+		this.session.user = staticData.session.user;
+		this.session.labels = staticData.session.labels;
+		this.lang = staticData.lang;
+		return yield* next;
+	});
+
+	csrf(app);
+
+	app.use(function* (next) {
+		try {
+			if (this.request.method === 'POST') {
+				this.assertCSRF(this.request.body);
+			}
+			return yield* next;
+		} catch (err) {
+			this.status = 403;
+			this.body = {
+				message: 'CSRF token is invalid'
+			}
+		}
+	});
 
 	return router.middleware();
 

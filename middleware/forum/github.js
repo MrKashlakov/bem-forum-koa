@@ -16,11 +16,11 @@ var GithubApiController = function (options) {
 	this._apiHash = {};
 };
 
-GithubApiController.prototype.getUserAPI = function* (token) {
+GithubApiController.prototype.getUserAPI = function (token) {
 	return this._apiHash[token];
 };
 
-GithubApiController.prototype.getDefaultAPI = function* () {
+GithubApiController.prototype.getDefaultAPI = function () {
 	var tokens = this.options.auth ? this.options.auth.tokens : [];
 	return this._apiHash[_.sample(tokens)];
 }
@@ -55,7 +55,7 @@ GithubApiController.prototype._apiCall = function* (settings) {
 	settings = settings || {};
 	var options = settings.options || {};
 
-	var api = settings.token ? yield this.getUserAPI(settings.token) : yield this.getDefaultAPI();
+	var api = settings.token ? this.getUserAPI(settings.token) : this.getDefaultAPI();
 	options = _.extend({}, this.options.storage, options);
 
 	if (!api) {
@@ -68,15 +68,6 @@ GithubApiController.prototype._apiCall = function* (settings) {
 	return yield thunkify(api[settings.group][settings.name]).call(null, options);
 };
 
-
-GithubApiController.prototype._getFnName = function (fn) {
-	var _this = this;
-	return Object.keys(this).filter(function (key) {
-		return _this[key] === fn;
-	})[0];
-};
-
-
 GithubApiController.prototype.getIssues = function* (settings) {
 	_.extend(settings, {
 		group: 'issues',
@@ -87,7 +78,7 @@ GithubApiController.prototype.getIssues = function* (settings) {
 		sort: 'updated'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.getIssue = function* (settings) {
@@ -96,7 +87,7 @@ GithubApiController.prototype.getIssue = function* (settings) {
 		name: 'getRepoIssue'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.createIssue = function* (settings) {
@@ -105,7 +96,7 @@ GithubApiController.prototype.createIssue = function* (settings) {
 		name: 'create'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.editIssue = function* (settings) {
@@ -114,7 +105,7 @@ GithubApiController.prototype.editIssue = function* (settings) {
 		name: 'edit'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 
@@ -124,7 +115,7 @@ GithubApiController.prototype.getComments = function* (settings) {
 		name: 'getComments'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.createComment = function* (settings) {
@@ -133,7 +124,7 @@ GithubApiController.prototype.createComment = function* (settings) {
 		name: 'createComment'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.deleteComment = function* (settings) {
@@ -142,7 +133,7 @@ GithubApiController.prototype.deleteComment = function* (settings) {
 		name: 'deleteComment'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.editComment = function* (settings) {
@@ -151,7 +142,7 @@ GithubApiController.prototype.editComment = function* (settings) {
 		name: 'editComment'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 
@@ -161,7 +152,7 @@ GithubApiController.prototype.getLabels = function* (settings) {
 		name: 'getLabels'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.getAuthUser = function* (settings) {
@@ -170,7 +161,7 @@ GithubApiController.prototype.getAuthUser = function* (settings) {
 		name: 'get'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 GithubApiController.prototype.getRepoInfo = function* (settings) {
@@ -179,7 +170,7 @@ GithubApiController.prototype.getRepoInfo = function* (settings) {
 		name: 'get'
 	});
 
-	return yield this._apiCall(settings);
+	return yield* this._apiCall(settings);
 };
 
 

@@ -1,8 +1,8 @@
 var thunkify = require('thunkify');
 
 var AuthController = require('./auth');
-//TODO: Use github API as module
-var GithubApiController = require('../../github');
+var AuthDataController = require('./data-layer');
+
 var AuthViewController = function (settings) {
 	this.options = settings || {};
 	this._init();
@@ -14,6 +14,7 @@ AuthViewController.prototype._init = function () {
 		this.router.get('/auth', this._sendAuthRequest());
 		this.router.get('/auth/callback', this._authCallback());
 	}
+	this._authDataController = new AuthDataController(this.options);
 };
 
 AuthViewController.prototype._authCallback = function () {
@@ -28,12 +29,9 @@ AuthViewController.prototype._authCallback = function () {
 			if (access) {
 				var accessToken = access[0];
 
-				var githubApi = new GithubApiController();
-				githubApi.addUserAPI(accessToken);
+				_this._authDataController.setToken(accessToken);
 
-				var user = yield githubApi.getAuthUser({
-					token: accessToken
-				});
+				var user = yield* _this._authDataController.getAuthUser();
 
 				var expires = new Date(Date.now() + (86400000 * 5)); // 5 days
 

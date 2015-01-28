@@ -9,7 +9,7 @@ block('forum-header')(
             },
             {
                 block : 'button',
-                url: req.viewBag.forumUrl + '?labels=bem-forum',
+                url: req.viewBag.forumUrl + '?labels=bem-forum-koa',
                 icon : { block : 'icon', mods : { view : 'bug' } },
                 mods : { theme : 'normal', size : 'm', type: 'link' },
                 mix: [
@@ -20,7 +20,7 @@ block('forum-header')(
             },
             {
                 block : 'button',
-                url: '//github.com/bem/bem-forum',
+                url: '//github.com/MrKashlakov/bem-forum-koa',
                 icon : { block : 'icon', mods : { view : 'github-logo' } },
                 mods : { theme : 'normal', size : 'm', type: 'link' },
                 mix: [
